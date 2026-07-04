@@ -13,10 +13,11 @@ import { handleDemoRequest } from './demoApi.js'
 const AuthContext = createContext(null)
 
 // -----------------------------------------------------------------------------
-// TEMPORAIRE : bypass de connexion pour prévisualiser l'app sans Supabase
-// configuré. Passe à `false` (ou supprime ce bloc) une fois Supabase branché.
+// Supabase est maintenant configuré (vraies variables d'environnement) : la
+// connexion par lien magique est requise pour que les projets soient partagés
+// entre tous les utilisateurs (synchronisation réelle via la base de données).
 // -----------------------------------------------------------------------------
-const GUEST_BYPASS = true
+const GUEST_BYPASS = false
 const GUEST_SESSION = GUEST_BYPASS
   ? { access_token: null, user: { id: 'guest-temp', email: 'invite@local' } }
   : null
