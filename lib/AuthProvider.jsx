@@ -8,6 +8,7 @@
 
 import { createContext, useContext, useEffect, useMemo, useState, useCallback } from 'react'
 import { getSupabaseBrowserClient } from './supabaseClient.js'
+import { handleDemoRequest } from './demoApi.js'
 
 const AuthContext = createContext(null)
 
@@ -49,8 +50,13 @@ export function AuthProvider({ children }) {
 
   // Appelle une route API interne en joignant le jeton d'accès de l'utilisateur,
   // pour que le serveur puisse identifier qui fait la requête.
+  // En mode invité (GUEST_BYPASS), les appels /api/... sont interceptés et
+  // simulés localement (localStorage) puisqu'il n'y a pas de vrai backend.
   const apiFetch = useCallback(
     async (url, options = {}) => {
+      if (GUEST_BYPASS && url.startsWith('/api/')) {
+        return handleDemoRequest(url, options)
+      }
       const token = session?.access_token
       const headers = {
         'Content-Type': 'application/json',
