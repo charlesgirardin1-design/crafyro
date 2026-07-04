@@ -67,7 +67,15 @@ export default function ContributionTimeline({ contributions, currentUserId, onC
             <span className="text-xs text-neutral-400">{formatDate(c.created_at)}</span>
           </div>
 
-          <p className="text-sm text-neutral-700 mt-2 whitespace-pre-wrap leading-relaxed">{c.content}</p>
+          {c.content?.startsWith('data:image') ? (
+            <img
+              src={c.content}
+              alt={`Contribution V${c.version}`}
+              className="mt-2 rounded-lg border border-neutral-200 max-w-full"
+            />
+          ) : (
+            <p className="text-sm text-neutral-700 mt-2 whitespace-pre-wrap leading-relaxed">{c.content}</p>
+          )}
 
           <FeedbackButtons contribution={c} currentUserId={currentUserId} onChanged={onChanged} />
 
