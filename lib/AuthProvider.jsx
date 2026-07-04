@@ -11,12 +11,22 @@ import { getSupabaseBrowserClient } from './supabaseClient.js'
 
 const AuthContext = createContext(null)
 
+// -----------------------------------------------------------------------------
+// TEMPORAIRE : bypass de connexion pour prévisualiser l'app sans Supabase
+// configuré. Passe à `false` (ou supprime ce bloc) une fois Supabase branché.
+// -----------------------------------------------------------------------------
+const GUEST_BYPASS = true
+const GUEST_SESSION = GUEST_BYPASS
+  ? { access_token: null, user: { id: 'guest-temp', email: 'invite@local' } }
+  : null
+
 export function AuthProvider({ children }) {
   const supabase = getSupabaseBrowserClient()
-  const [session, setSession] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [session, setSession] = useState(GUEST_SESSION)
+  const [loading, setLoading] = useState(!GUEST_BYPASS)
 
   useEffect(() => {
+    if (GUEST_BYPASS) return
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session)
       setLoading(false)
