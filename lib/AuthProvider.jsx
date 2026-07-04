@@ -1,42 +1,49 @@
 // -----------------------------------------------------------------------------
 // AuthProvider.jsx
-// Contexte React qui expose la session Supabase (connexion par lien magique,
-// sans mot de passe) à toute l'application, ainsi que quelques helpers d'appel
-// API qui joignent automatiquement le jeton d'accès de l'utilisateur connecté.
+// Contexte React qui expose la session Supabase à toute l'application. Chaque
+// visiteur est connecté automatiquement via une session anonyme (aucune saisie
+// d'email/mot de passe requise), ce qui permet quand même à toutes les
+// données (projets, contributions...) d'être stockées dans la vraie base de
+// données partagée. signInWithEmail reste disponible si besoin plus tard.
 // -----------------------------------------------------------------------------
 'use client'
 
 import { createContext, useContext, useEffect, useMemo, useState, useCallback } from 'react'
 import { getSupabaseBrowserClient } from './supabaseClient.js'
-import { handleDemoRequest } from './demoApi.js'
 
 const AuthContext = createContext(null)
 
-// -----------------------------------------------------------------------------
-// Supabase est maintenant configuré (vraies variables d'environnement) : la
-// connexion par lien magique est requise pour que les projets soient partagés
-// entre tous les utilisateurs (synchronisation réelle via la base de données).
-// -----------------------------------------------------------------------------
-const GUEST_BYPASS = false
-const GUEST_SESSION = GUEST_BYPASS
-  ? { access_token: null, user: { id: 'guest-temp', email: 'invite@local' } }
-  : null
-
 export function AuthProvider({ children }) {
   const supabase = getSupabaseBrowserClient()
-  const [session, setSession] = useState(GUEST_SESSION)
-  const [loading, setLoading] = useState(!GUEST_BYPASS)
+  const [session, setSession] = useState(null)
+  const [loading, setLoading] = useState(true)
 
+  // Connexion automatique et invisible : chaque navigateur reçoit une vraie
+  // session Supabase (utilisateur "anonyme" côté serveur), sans email ni mot de
+  // passe. Cela permet aux projets/contributions d'être stockés dans la vraie
+  // base de données partagée et donc synchronisés entre tout le monde, tout en
+  // gardant l'expérience "sans connexion" pour la personne qui utilise l'app.
   useEffect(() => {
-    if (GUEST_BYPASS) return
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session)
+    let cancelled = false
+    supabase.auth.getSession().then(async ({ data }) => {
+      if (cancelled) return
+      if (data.session) {
+        setSession(data.session)
+        setLoading(false)
+        return
+      }
+      const { data: anonData, error } = await supabase.auth.signInAnonymously()
+      if (cancelled) return
+      if (!error) setSession(anonData.session)
       setLoading(false)
     })
     const { data: listener } = supabase.auth.onAuthStateChange((_event, newSession) => {
       setSession(newSession)
     })
-    return () => listener.subscription.unsubscribe()
+    return () => {
+      cancelled = true
+      listener.subscription.unsubscribe()
+    }
   }, [supabase])
 
   const signInWithEmail = useCallback(
@@ -49,15 +56,11 @@ export function AuthProvider({ children }) {
 
   const signOut = useCallback(() => supabase.auth.signOut(), [supabase])
 
-  // Appelle une route API interne en joignant le jeton d'accès de l'utilisateur,
-  // pour que le serveur puisse identifier qui fait la requête.
-  // En mode invité (GUEST_BYPASS), les appels /api/... sont interceptés et
-  // simulés localement (localStorage) puisqu'il n'y a pas de vrai backend.
+  // Appelle une route API interne en joignant le jeton d'accès de l'utilisateur
+  // (y compris pour les sessions anonymes), pour que le serveur puisse
+  // identifier qui fait la requête et appliquer les bonnes règles RLS.
   const apiFetch = useCallback(
     async (url, options = {}) => {
-      if (GUEST_BYPASS && url.startsWith('/api/')) {
-        return handleDemoRequest(url, options)
-      }
       const token = session?.access_token
       const headers = {
         'Content-Type': 'application/json',
