@@ -8,7 +8,7 @@ import DrawingCanvas from './DrawingCanvas.jsx'
 // (V1, V2, V3...) à la chaîne collective du projet.
 // Pour les projets de type "design", la contribution se fait via une page
 // blanche à dessiner (DrawingCanvas) plutôt qu'un champ de texte.
-export default function AddContributionForm({ projectId, projectType, disabled, onAdded }) {
+export default function AddContributionForm({ projectId, projectType, authorName, disabled, onAdded }) {
   const { apiFetch } = useAuth()
   const isDesign = projectType === 'design'
   const [content, setContent] = useState('')
@@ -41,7 +41,7 @@ export default function AddContributionForm({ projectId, projectType, disabled, 
   return (
     <form onSubmit={submit} className="card p-4">
       {isDesign ? (
-        <DrawingCanvas ref={canvasRef} disabled={disabled} />
+        <DrawingCanvas ref={canvasRef} disabled={disabled} authorName={authorName} />
       ) : (
         <textarea
           value={content}
