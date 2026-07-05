@@ -1,5 +1,5 @@
 -- -----------------------------------------------------------------------------
--- ChainCraft — schéma de base de données Supabase (Postgres)
+-- Crafyro — schéma de base de données Supabase (Postgres)
 -- À exécuter une fois dans : Supabase Dashboard > SQL Editor > New query.
 -- Suppose que l'authentification Supabase (auth.users) est déjà activée
 -- (c'est le cas par défaut sur tout projet Supabase).
