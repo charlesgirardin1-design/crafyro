@@ -71,6 +71,7 @@ export default function ProjectDetailPage() {
   const { project, members, isMember, contributions } = state
   const meta = getProjectTypeMeta(project.type)
   const isFull = members.length >= project.max_participants
+  const myPseudo = members.find((m) => m.user_id === user.id)?.users?.pseudo
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -109,7 +110,12 @@ export default function ProjectDetailPage() {
           <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-5">
             <div className="md:col-span-2 space-y-4">
               {project.status === 'active' && (
-                <AddContributionForm projectId={project.id} projectType={project.type} onAdded={load} />
+                <AddContributionForm
+                  projectId={project.id}
+                  projectType={project.type}
+                  authorName={myPseudo}
+                  onAdded={load}
+                />
               )}
               <ContributionTimeline
                 contributions={contributions}
