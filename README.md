@@ -1,8 +1,8 @@
-# ChainCraft
+# Crafyro
 
 « Créer ensemble. En chaîne. Sans ego. »
 
-ChainCraft n'est pas un réseau social classique : pas de fil infini, pas de likes publics, pas de profil ego. De petits groupes (2 à 10 personnes) rejoignent ou créent un projet créatif (texte, musique, design, brainstorm, mixte) et construisent une œuvre collective, une contribution versionnée à la fois (V1, V2, V3...), pendant une durée de vie stricte de 30 jours. À l'expiration, le projet est archivé automatiquement (avec notification 48h avant et export possible).
+Crafyro n'est pas un réseau social classique : pas de fil infini, pas de likes publics, pas de profil ego. De petits groupes (2 à 10 personnes) rejoignent ou créent un projet créatif (texte, musique, design, brainstorm, mixte) et construisent une œuvre collective, une contribution versionnée à la fois (V1, V2, V3...), pendant une durée de vie stricte de 30 jours. À l'expiration, le projet est archivé automatiquement (avec notification 48h avant et export possible).
 
 ## Stack
 
@@ -24,7 +24,7 @@ ChainCraft n'est pas un réseau social classique : pas de fil infini, pas de lik
    - `anon public key` → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
    - `service_role key` → `SUPABASE_SERVICE_ROLE_KEY` (⚠️ secret, jamais exposé au client)
 
-L'authentification utilise un magic link par email (aucune configuration OAuth requise). Dans **Authentication > URL Configuration**, ajoutez l'URL de votre site (ex. `https://chaincraft.vercel.app`) et `https://chaincraft.vercel.app/auth/callback` aux Redirect URLs.
+L'authentification utilise des sessions anonymes automatiques (aucune configuration OAuth requise). Dans **Authentication > URL Configuration**, ajoutez l'URL de votre site (ex. `https://crafyro.vercel.app`) et `https://crafyro.vercel.app/auth/callback` aux Redirect URLs.
 
 ### 2. Obtenir une clé Gemini (assistant IA)
 
