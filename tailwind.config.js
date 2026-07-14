@@ -65,6 +65,14 @@ module.exports = {
           '0%, 100%': { opacity: 1 },
           '50%': { opacity: 0.55 },
         },
+        gradientShift: {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+        },
+        blink: {
+          '0%, 100%': { opacity: 1 },
+          '50%': { opacity: 0 },
+        },
       },
       animation: {
         fadeIn: 'fadeIn 0.35s ease-out both',
@@ -75,6 +83,8 @@ module.exports = {
         shimmer: 'shimmer 1.6s linear infinite',
         spinSlow: 'spin 6s linear infinite',
         pulseSoft: 'pulseSoft 2.4s ease-in-out infinite',
+        gradientShift: 'gradientShift 5s ease-in-out infinite',
+        blink: 'blink 0.9s step-end infinite',
       },
     },
   },
