@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useAuth } from '../lib/AuthProvider.jsx'
+import TypewriterText from './TypewriterText.jsx'
 
 const ACTIONS = [
   { value: 'idea', icon: '💡', label: 'Proposer des idées', bg: 'bg-gradient-to-br from-amber-400 to-spark-600' },
@@ -77,7 +78,7 @@ export default function AssistantPanel({ projectId }) {
 
       {suggestion && (
         <div className="mt-4 bg-chain-50 border border-chain-100 rounded-lg p-3 text-sm text-neutral-700 leading-relaxed animate-rise">
-          {suggestion}
+          <TypewriterText text={suggestion} speed={14} />
         </div>
       )}
     </div>

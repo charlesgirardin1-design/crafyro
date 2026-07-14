@@ -69,7 +69,7 @@ export default function Header() {
             <LogoMark />
           </span>
           <span>
-            Craf<span className="text-chain-600">yro</span>
+            Craf<span className="text-gradient-animate">yro</span>
           </span>
         </Link>
 
