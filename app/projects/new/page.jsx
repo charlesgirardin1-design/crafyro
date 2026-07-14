@@ -86,20 +86,29 @@ export default function NewProjectPage() {
           <div>
             <label className="text-sm font-medium text-neutral-700 mb-1.5 block">Type de projet</label>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-              {PROJECT_TYPES.map((t) => (
-                <button
-                  type="button"
-                  key={t.value}
-                  onClick={() => setForm((f) => ({ ...f, type: t.value }))}
-                  className={`text-left text-sm px-3 py-2 rounded-lg border transition ${
-                    form.type === t.value
-                      ? 'bg-chain-50 border-chain-400 text-chain-700'
-                      : 'border-neutral-200 text-neutral-600 hover:border-chain-300'
-                  }`}
-                >
-                  <span aria-hidden>{t.icon}</span> {t.label}
-                </button>
-              ))}
+              {PROJECT_TYPES.map((t) => {
+                const active = form.type === t.value
+                return (
+                  <button
+                    type="button"
+                    key={t.value}
+                    onClick={() => setForm((f) => ({ ...f, type: t.value }))}
+                    className={`flex items-center gap-2 text-left text-sm px-3 py-2.5 rounded-xl border-2 transition-all duration-200 ${
+                      active
+                        ? `${t.soft} shadow-sm scale-[1.02]`
+                        : 'border-neutral-200 text-neutral-600 hover:border-neutral-300 hover:-translate-y-0.5'
+                    }`}
+                  >
+                    <span
+                      className={`w-7 h-7 rounded-full flex items-center justify-center text-sm text-white shrink-0 ${t.iconBg}`}
+                      aria-hidden
+                    >
+                      {t.icon}
+                    </span>
+                    {t.label}
+                  </button>
+                )
+              })}
             </div>
           </div>
 
